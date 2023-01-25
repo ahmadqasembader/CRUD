@@ -1,4 +1,5 @@
-const express = require('express')
+const express = require('express');
+const mongoose = require('./mongoose');
 const User = require('./mongoose')
 const app = express();
 
@@ -8,39 +9,27 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 
+//const user = new User({ username: "ahmad", name: "ahmad", email: "ahmad.bader@gunsel.com.tr", password: "bjhksv" });
+//console.log(user);
 
 /****************************************/
 /* GET, POST, DELETE, and PUT Requests  */
 /****************************************/
-app.get('/', (req, res) => {
+app.get('/', (req, res) => { 
     res.send('Hello World')
 })
 
-async function run() {
-    try{
-        const user = await User.find({name: "ahmad"})
-    }catch (err){
-        console.log(err.message)
-    }
-}
-
-
-app.post('/create',  async (req, res) => {
+app.post('/create', async (req, res) => {
     const { username, name, email, password } = req.body;
 
-    console.log( username, name, email, password)
-    const user = await User.create({
-        username, 
-        name, 
-        email, 
-        password
-    })
-    console.log(user)
-    //const user = await new User({username, name, email, password});
-    //await user.save()
+    console.log(username, name, email, password)
+    
+    const user = new User({username, name, email, password});
+    user.save()
+    console.log(user);
 
 })
 
-app.listen(3100, () => {
+app.listen(3000, () => {
     console.log('Server is running');
 })
