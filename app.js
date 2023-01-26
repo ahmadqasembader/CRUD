@@ -14,7 +14,15 @@ app.use(express.json())
 /****************************************/
 app.get('/', (req, res) => {
     console.log("Hello world");
-    console.log(User.findById("63d2b53b1d3c19ccde3d66c5"))
+    const id = "63d2ee5d0725bc8ce90e45d1";
+
+    User.findById(id, (err, data) => {
+        if(err){
+            console.log(err)
+        }else{
+            console.log(`User Data: ${data}`)
+        }
+    })
 })
 
 app.post('/create', async (req, res) => {
@@ -28,7 +36,6 @@ app.post('/create', async (req, res) => {
     })
     console.log("data:  ")
     console.log(user);
-
 })
 
 app.listen(3000, () => {
