@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
 const User = require('../mongoose');
 const express = require('express');
 var jwt = require('jsonwebtoken');
 const router = express.Router();
 
+router.use(express.json())
 
 router.get('/', (req, res) => {
 
@@ -13,8 +13,8 @@ router.get('/', (req, res) => {
         if (err) {
             console.log(err.message)
             return;
-        } else if (data.length === 0) {
-            //send 404 page
+        } else if (data.length === 0) { 
+            //if no entries in DB send 404 page
             res.send("No data was found")
         } else {
             entry = data
@@ -33,8 +33,11 @@ router.post('/create', async (req, res) => {
 
     //create a new user model and save to the DB
     let user = new User({ username, name, email, password });
+
+    //Generate JWT token for each created user
     let token = jwt.sign({ user }, "token")
     console.log(token)
+
     await user.save().then(() => {
         console.log("Datasaved");
     }).catch((err) => console.log(err.message))
@@ -44,7 +47,6 @@ router.post('/create', async (req, res) => {
 
 router.put('/:id', (req, res) => {
     let id = req.params.id;
-
     User.findByIdAndUpdate(id, req.body, { new: true })
         .catch(err => console.log(err));
 })
