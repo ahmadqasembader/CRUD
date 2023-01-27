@@ -17,29 +17,34 @@ router.get('/', (req, res) => {
             //if no entries in DB send 404 page
             res.send("No data was found")
         } else {
+            console.log(data)
             entry = data
             res.send(entry)
         }
     })
+  
 })
 
 router.post('/create', async (req, res) => {
     let { username, name, email, password } = req.body;
 
-    //defulat the email to the username + @gunsel.com.tr if no email was entered
+    //default the email to the username + @gunsel.com.tr if no email was entered
     if (req.body.email == null || req.body.email === ' ') {
         email = `${username}@gunsel.com.tr`
     }
 
     //create a new user model and save to the DB
     let user = new User({ username, name, email, password });
-
+    // const newUser = await user.save()
     //Generate JWT token for each created user
     let token = jwt.sign({ user }, "token")
     console.log(token)
 
-    await user.save().then(() => {
+    // res.status(200).json({username:newUser.username})
+
+    await user.save().then((user) => {
         console.log("Datasaved");
+        res.status(200).json({username:user.username})
     }).catch((err) => console.log(err.message))
     
 })
