@@ -1,43 +1,23 @@
 const express = require('express');
-const mongoose = require('./mongoose');
-const User = require('./mongoose')
 const app = express();
+const user_routes = require('./routes/user_routes')
 
-// Express.js set up
-//app.use(express.static('./methods-public'))
-app.use(express.urlencoded({ extended: false }))
+const port = process.env.port || 3000
+
+//app.use(express.static('../methods-public'))
+//app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 
 /****************************************/
 /* GET, POST, DELETE, and PUT Requests  */
 /****************************************/
-app.get('/', (req, res) => {
-    console.log("Hello world");
-    const id = "63d2ee5d0725bc8ce90e45d1";
+app.use(express.json())
 
-    User.findById(id, (err, data) => {
-        if(err){
-            console.log(err)
-        }else{
-            console.log(`User Data: ${data}`)
-        }
-    })
-})
-
-app.post('/create', async (req, res) => {
-    const { username, name, email, password } = req.body;
- 
-    console.log(username, name, email, password)
-
-    const user = new User({ username, name, email, password });
-    await user.save().then(() => {
-        console.log("Datasaved");
-    })
-    console.log("data:  ")
-    console.log(user);
-})
-
-app.listen(3000, () => {
-    console.log('Server is running');
+app.get('/', user_routes);
+app.post('/create', user_routes);
+app.put('/:id', user_routes)
+app.delete('/:id', user_routes)
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 })

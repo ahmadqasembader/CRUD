@@ -3,25 +3,35 @@
 /****************************************/
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb://localhost:27017/crud-application-nodejs")
+mongoose.connect("mongodb://127.0.0.1:27017/crud-application-nodejs")
 .then(() => console.log("Database connected!"))
 .catch(err => console.log("MongoDB Errors are the following " + err));
 
 mongoose.set('strictQuery', false);
 
 const userSchema = new mongoose.Schema({
-    username: String,
+    username: {
+        type: String,
+        unique: [true, 'username is taken'],
+        lowercase: true,
+        maxLength: [20, 'Too many characters, max is 20']
+    },
     name: {
         type: String,
-        required: true,
+        required: [true, 'Please enter name'],
         lowercase: true
     },
     email: {
         type: String,
-        required: true,
-        lowercase: true
+        required: [true, 'Please enter email'],
+        lowercase: true,
     },
-    password: String
+    password: {
+        type: String,
+        required: [true, 'Please enter password'],
+        minLength: [5, 'at least 5 characters'],
+        maxLength: [20, 'Too many characters, max is 20']
+    }
 })
 
 module.exports = mongoose.model("User", userSchema);
