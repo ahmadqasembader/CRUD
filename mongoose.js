@@ -23,13 +23,13 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        unique: [true, 'email is taken'],
         lowercase: true,
     },
-    password: {
+    passwordHashed: {
         type: String,
         required: [true, 'Please enter password'],
-        minLength: [5, 'at least 5 characters'],
-        maxLength: [20, 'Too many characters, max is 20']
+        minLength: [5, 'at least 5 characters']
     }
 })
 
