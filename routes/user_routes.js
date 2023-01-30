@@ -1,7 +1,7 @@
 const User = require('../mongoose');
 const express = require('express');
 var jwt = require('jsonwebtoken');
-const controller = require('../controller/index.js')
+const controller = require('../controller/controllers.js')
 
 const router = express.Router();
 
