@@ -9,9 +9,11 @@ const port = process.env.port || 3000
 /* GET, POST, PUT, and DELETE Requests  */
 /****************************************/
 app.get('/', user_routes);
+app.get('/login', user_routes);
 app.get('/:username', user_routes);
 app.post('/create', user_routes);
 app.put('/:id', user_routes);
+app.put('/resetPassword/:id', user_routes)
 app.delete('/:id', user_routes);
 
 
