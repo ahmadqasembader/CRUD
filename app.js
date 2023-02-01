@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
-const user_routes = require('./routes/user_routes')
+const dotenv = require('dotenv').config();
 
+const user_routes = require('./routes/user_routes')
 const port = process.env.port || 3000
 
 
@@ -13,7 +14,6 @@ app.get('/login', user_routes);
 app.get('/:username', user_routes);
 app.post('/create', user_routes);
 app.put('/:id', user_routes);
-app.put('/resetPassword/:id', user_routes)
 app.delete('/:id', user_routes);
 
 

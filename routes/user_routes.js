@@ -6,12 +6,13 @@ const router = express.Router();
 
 router.use(express.json())
 
-router.get('/login', controller.login)
-router.get('/', controller.findAllEntries)
-router.get('/:username', controller.findByUsername)
-router.post('/create', controller.createUser)
-router.put('/:id', controller.editUser)
-router.put('/resetPassword/:id', controller.resestPassword)
-router.delete('/:id', controller.removeUser)
+const user = new controller("Message from the constructor");
+
+router.get('/login', user.login)
+router.get('/', user.findAllEntries)
+router.get('/:username', user.findByUserName)
+router.post('/create', user.createUser)
+router.put('/:id', user.editUser)
+router.delete('/:id', user.removeUser)
 
 module.exports = router;
