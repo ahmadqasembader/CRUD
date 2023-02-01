@@ -2,6 +2,9 @@ const User = require('../mongoose');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
+const JWT_SECRET = 
+    "goK!pusp6ThEdURUtRenOwUhAsWUCLheBazl!uJLPlS8EbreWLdrupIwabRAsiBu";
+
 class Users_Operation 
 {
     constructor(mes) {
@@ -18,7 +21,7 @@ class Users_Operation
         //assign the JWT to the user
         if (user && (await bcrypt.compare(user.passwordHashed, password))) 
         {
-            const token = jwt.sign({ user });
+            const token = jwt.sign({ user }, JWT_SECRET);
             user.token = token;
         }
 
@@ -39,7 +42,7 @@ class Users_Operation
         })
     }
 
-    // Return a specific user based on the username(unique)
+    // Return a specific user based on the username (unique)
     findByUserName(req, res) 
     {
         let username = req.params.username;
@@ -64,7 +67,7 @@ class Users_Operation
 
         try {
             //create a new user model and save to the DB
-            const user = new User({ username, name, email, passwordHashed });
+            const user = new User({ username, name, email, passwordHashed })
     
             //Generate JWT token for each created user
             let token = jwt.sign({ user }, "token",)
@@ -82,7 +85,7 @@ class Users_Operation
                 );
             })
             
-        } catch (error) {
+        } catch (err) {
             console.log('err ' + err);
             res.status(500).send(Error);
         }

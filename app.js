@@ -12,7 +12,7 @@ const port = process.env.port || 3000
 app.get('/', user_routes);
 app.get('/login', user_routes);
 app.get('/:username', user_routes);
-app.post('/create', user_routes);
+app.post('/signup', user_routes);
 app.put('/:id', user_routes);
 app.delete('/:id', user_routes);
 
