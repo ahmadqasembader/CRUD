@@ -8,12 +8,32 @@ class Users_Operation
         console.log("Message: " + mes)
     }
 
+    async login(req, res) 
+    {
+        const { email, password } = req.body;
+        
+        //validate if the user does exist
+        const user = await User.findOne({ email })
+
+        //assign the JWT to the user
+        if (user && (await bcrypt.compare(user.passwordHashed, password))) 
+        {
+            const token = jwt.sign({ user });
+            user.token = token;
+        }
+
+        res.status(200).send(user);
+    }
+
     // Returns all users
     findAllEntries(req, res) 
     {
         User.find((err, data) => {
             if (data.length === 0)
-                res.send("No data was found")
+                res.json(
+                    {
+                        message: "No data was found"
+                    })
             else
                 res.send(data)
         })
@@ -42,67 +62,52 @@ class Users_Operation
         if (req.body.email == null || req.body.email == '')
             email = `${username}@gunsel.com.tr`
 
-
-        //create a new user model and save to the DB
-        const user = new User({ username, name, email, passwordHashed });
-
-        //Generate JWT token for each created user
-        let token = jwt.sign({ user }, "token",)
-        user.token = token;
-
-        //saving the user into the database
-        await user.save(() => 
-        {
-            console.log("Datasaved");
-            res.status(200).json(
-                {
-                    username: user.username,
-                    email: email, password:
-                        passwordHashed, token: user.token
-                }
-            )
-        })
+        try {
+            //create a new user model and save to the DB
+            const user = new User({ username, name, email, passwordHashed });
+    
+            //Generate JWT token for each created user
+            let token = jwt.sign({ user }, "token",)
+            user.token = token;
+    
+            //saving the user into the database
+            user.save((user) => {
+                console.log("Datasaved");
+                res.status(200).json(
+                    {
+                        username,
+                        email,
+                        token
+                    }
+                );
+            })
+            
+        } catch (error) {
+            console.log('err ' + err);
+            res.status(500).send(Error);
+        }
     }
-
 
     // Edit user details
     editUser(req, res) 
     {
         let id = req.params.id;
-        User.findByIdAndUpdate(id, req.body, { new: true })
-        res.status(200).send(id);
+        User.findByIdAndUpdate(id, req.body, { new: true }, () => {
+            res.status(200).send(id);
+        })
+
     }
 
     // Deleting users from database
     removeUser(req, res) 
     {
-        id = req.params.id;
+        const id = req.params.id;
 
         User.findByIdAndDelete(id, () => {
             res.status(200).send("User Has Been Removed");
-        });
+        })
     }
 
-
-    async login(req, res) 
-    {
-        const { email, passwordHashed } = req.body;
-
-        //validate if the user does exist
-        const user = await User.findOne({ email })
-
-        //validating the password
-        const flag = (await bcrypt.compare(passwordHashed, user.passwordHashed));
-
-        //assign the JWT to the user
-        if (user && flag) 
-        {
-            const token = jwt.sign({ user });
-            user.token = token;
-        }
-
-        res.status(200).send(user);
-    }
 }
 
 module.exports = Users_Operation;
