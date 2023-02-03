@@ -16,13 +16,15 @@ class Users_Operation {
     
     async login(req, res) 
     {
+        res.render('index', {name: 'Ahmad Bader'})
         const { email, password } = req.body;
         try {
             //validate if the user does exist
             const user = await User.findOne({ email })
 
             //assign the JWT to the user
-            if (user && (await bcrypt.compare(password, user.passwordHashed))) {
+            if (user && (await bcrypt.compare(password, user.passwordHashed))) 
+            {
                 const token = jwt.sign({user}, config.TOKEN_KEY)
                 //res.status(200).send({user, token});
             }
@@ -33,9 +35,7 @@ class Users_Operation {
     }
 
     // Returns all users
-    findAllEntries(req, res) {
-        
-        res.render('index')
+    dashboard(req, res) {
         // User.find((err, data) => {
         //     if (data.length === 0)
         //         res.json(

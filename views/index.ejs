@@ -1,18 +1,25 @@
-<form action="/signup" method="POST">
-    <h3>Sign Up</h3>
-    <div class="form-row">
-      <label for="name"> Enter username </label>
-      <input type="text" name="username" id="username" autocomplete="false" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="" href="/public/css/styles.css">
+	<title>Log In</title>
+</head>
+<body>
+	<div class="login">
+		<h1>Log in</h1>
+		<hr>
+		<form>
 
-      <label for="name"> Enter Name </label>
-      <input type="text" name="name" id="name" autocomplete="false" />
-
-      <label for="name"> Enter Email </label>
-      <input type="email" name="Email" id="email" autocomplete="false" />
-
-      <label for="name"> Enter Password </label>
-      <input type="password" name="password" id="password" autocomplete="false" />
-
-    </div>
-    <button type="submit" class="block">submit</button>
-  </form>
+			<label for="usernameInput" class="usernameLabel">Username:</label>
+			<input type="text" class="userNameInput">
+			<label for="passwordInput" class="passwordLabel">Password:</label>
+			<input type="password" class="passwordInput">
+			<button type="submit">Submit</button>
+			<a href="#">Create Account</a>
+		</form>
+	</div>
+</body>
+</html>

@@ -10,7 +10,8 @@ const user = new controller("Message from the constructor");
 
 router.get('/login', user.login)
 router.get('/welcome', auth, user.signedIn)
-router.get('/', user.findAllEntries)
+router.get('/', user.dashboard)
+//router.get('/about', user.about)
 router.get('/:username', user.findByUserName)
 router.post('/signup', user.createUser)
 router.put('/:id', user.editUser)
