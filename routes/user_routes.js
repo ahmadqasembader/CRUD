@@ -1,7 +1,7 @@
 const User = require('../mongoose');
 const express = require('express');
 const controller = require('../controller/controllers.js')
-
+const auth = require('../middleware/middleware.js')
 const router = express.Router();
 
 router.use(express.json())
@@ -9,6 +9,7 @@ router.use(express.json())
 const user = new controller("Message from the constructor");
 
 router.get('/login', user.login)
+router.get('/welcome', auth, user.signedIn)
 router.get('/', user.findAllEntries)
 router.get('/:username', user.findByUserName)
 router.post('/signup', user.createUser)

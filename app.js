@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const dotenv = require('dotenv').config();
+require('dotenv').config();
 
 const user_routes = require('./routes/user_routes')
 const port = process.env.port || 3000
@@ -10,6 +10,7 @@ const port = process.env.port || 3000
 /* GET, POST, PUT, and DELETE Requests  */
 /****************************************/
 app.get('/', user_routes);
+app.get('/welcome', user_routes)
 app.get('/login', user_routes);
 app.get('/:username', user_routes);
 app.post('/signup', user_routes);

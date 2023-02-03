@@ -1,36 +1,39 @@
 const User = require('../mongoose');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-const JWT_SECRET = 
-    "goK!pusp6ThEdURUtRenOwUhAsWUCLheBazl!uJLPlS8EbreWLdrupIwabRAsiBu";
-
-class Users_Operation 
-{
+const config = process.env
+class Users_Operation {
     constructor(mes) {
         console.log("Message: " + mes)
     }
 
+    signedIn(req, res) {
+        res.json(req.user)
+    }
+    
     async login(req, res) 
     {
         const { email, password } = req.body;
-        
-        //validate if the user does exist
-        const user = await User.findOne({ email })
+        try {
+            //validate if the user does exist
+            const user = await User.findOne({ email })
 
-        //assign the JWT to the user
-        if (user && (await bcrypt.compare(user.passwordHashed, password))) 
-        {
-            const token = jwt.sign({ user }, JWT_SECRET);
-            user.token = token;
+            //assign the JWT to the user
+            if (user && (await bcrypt.compare(password, user.passwordHashed))) {
+                const token = jwt.sign({user}, config.TOKEN_KEY)
+          
+                res.status(200).send({user, token});
+            }
+            
+        } catch (error) {
+            res.send(error)
         }
-
-        res.status(200).send(user);
     }
 
     // Returns all users
-    findAllEntries(req, res) 
-    {
+    findAllEntries(req, res) {
         User.find((err, data) => {
             if (data.length === 0)
                 res.json(
@@ -43,8 +46,7 @@ class Users_Operation
     }
 
     // Return a specific user based on the username (unique)
-    findByUserName(req, res) 
-    {
+    findByUserName(req, res) {
         let username = req.params.username;
 
         User.find(
@@ -54,8 +56,7 @@ class Users_Operation
     }
 
     //create a new user and save it to DB
-    async createUser(req, res) 
-    {
+    async createUser(req, res) {
         let { username, name, email, password } = req.body;
 
         //hashing the password
@@ -68,11 +69,11 @@ class Users_Operation
         try {
             //create a new user model and save to the DB
             const user = new User({ username, name, email, passwordHashed })
-    
+
             //Generate JWT token for each created user
             let token = jwt.sign({ user }, "token",)
             user.token = token;
-    
+
             //saving the user into the database
             user.save((user) => {
                 console.log("Datasaved");
@@ -84,7 +85,7 @@ class Users_Operation
                     }
                 );
             })
-            
+
         } catch (err) {
             console.log('err ' + err);
             res.status(500).send(Error);
@@ -92,8 +93,7 @@ class Users_Operation
     }
 
     // Edit user details
-    editUser(req, res) 
-    {
+    editUser(req, res) {
         let id = req.params.id;
         User.findByIdAndUpdate(id, req.body, { new: true }, () => {
             res.status(200).send(id);
@@ -102,8 +102,7 @@ class Users_Operation
     }
 
     // Deleting users from database
-    removeUser(req, res) 
-    {
+    removeUser(req, res) {
         const id = req.params.id;
 
         User.findByIdAndDelete(id, () => {
