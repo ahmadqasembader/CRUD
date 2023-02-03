@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const user_routes = require('./routes/user_routes')
 const port = process.env.port || 3000
-
+app.set('view engine', 'ejs')
 
 /****************************************/
 /* GET, POST, PUT, and DELETE Requests  */

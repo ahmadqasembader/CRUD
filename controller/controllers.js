@@ -1,6 +1,7 @@
-const User = require('../mongoose');
 const bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
+const ejs = require('ejs');
+const jwt = require('jsonwebtoken');
+const User = require('../mongoose');
 require('dotenv').config();
 
 const config = process.env
@@ -23,8 +24,7 @@ class Users_Operation {
             //assign the JWT to the user
             if (user && (await bcrypt.compare(password, user.passwordHashed))) {
                 const token = jwt.sign({user}, config.TOKEN_KEY)
-          
-                res.status(200).send({user, token});
+                //res.status(200).send({user, token});
             }
             
         } catch (error) {
@@ -34,15 +34,17 @@ class Users_Operation {
 
     // Returns all users
     findAllEntries(req, res) {
-        User.find((err, data) => {
-            if (data.length === 0)
-                res.json(
-                    {
-                        message: "No data was found"
-                    })
-            else
-                res.send(data)
-        })
+        
+        res.render('index')
+        // User.find((err, data) => {
+        //     if (data.length === 0)
+        //         res.json(
+        //             {
+        //                 message: "No data was found"
+        //             })
+        //     else
+        //         res.send(data)
+        // })
     }
 
     // Return a specific user based on the username (unique)
