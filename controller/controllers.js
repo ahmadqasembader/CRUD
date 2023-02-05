@@ -1,61 +1,64 @@
 const bcrypt = require('bcrypt');
-const ejs = require('ejs');
 const jwt = require('jsonwebtoken');
 const User = require('../mongoose');
 require('dotenv').config();
 
 const config = process.env
-class Users_Operation {
-    constructor(mes) {
+
+class Users_Operation 
+{
+    constructor(mes) 
+    {
         console.log("Message: " + mes)
     }
 
-    signedIn(req, res) {
-        const {email} = req.body.user
-        res.json(req.body.user)    
-    }
-    
-    async login(req, res) 
-    {
-        let {email, password} = req.body
-        try {
-            const user = await User.findOne({ email })
-
-            //assign the JWT to the user
-            if (user && (await bcrypt.compare(password, user.passwordHashed))) 
-            {
-                const token = jwt.sign({user}, config.TOKEN_KEY, {expiresIn: "24h"})
-                //console.log({user, token})
-                
-                res.cookie("access_token", token, {httpOnly: true})
-                res.redirect('/welcome')
-            }else{
-                res.send("<a href='/'>Username or password is incorrect</a>")
-            }
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
-
-    // render the index page
+    // Home page
     index(req, res) 
     {
         res.render('index')
     }
 
-    // Return a specific user based on the username (unique)
-    findByUserName(req, res) {
-        let username = req.params.username;
 
-        User.find(
-            { "username": username },
-            (_, data) => { res.status(200).send(data) }
-        )
+    dashboard(req, res) 
+    {
+        const {user} = req.body.user
+        res.send(`<h1>Welcome ${user.name}</h1>`)
+    }
+    
+    async login(req, res) 
+    {
+        //getting data from user
+        let {email, password} = req.body
+        try {
+            const user = await User.findOne({ email })
+
+            //assign the JWT to the user
+            //authenticate the given password
+            if (user && (await bcrypt.compare(password, user.passwordHashed))) 
+            {
+                const token = jwt.sign({user}, config.TOKEN_KEY, {expiresIn: "24h"})
+                
+                //storing the jwt token inside an http cookie
+                res.cookie("access_token", token, {httpOnly: true})
+
+                //redirecting to the dashboard which contains an authenticator middlerware
+                //to authenticate the jwt token
+                res.redirect('/dashboard')
+            }
+            else
+            {
+                res.send("<a href='/'>Username or password is incorrect</a>")
+            }
+        } 
+        catch (error) 
+        {
+            console.log(error)
+        }
     }
 
     //create a new user and save it to DB
-    async createUser(req, res) {
+    async createUser(req, res) 
+    {
         let { username, name, email, password } = req.body;
 
         //hashing the password
@@ -89,6 +92,17 @@ class Users_Operation {
             console.log('err ' + err);
             res.status(500).send(Error);
         }
+    }
+
+
+    // Return a specific user based on the username (unique)
+    findByUserName(req, res) {
+        let username = req.params.username;
+
+        User.find(
+            { "username": username },
+            (_, data) => { res.status(200).send(data) }
+        )
     }
 
     // Edit user details

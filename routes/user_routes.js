@@ -12,7 +12,7 @@ const user = new controller("Message from the constructor");
 router.get('/', user.index)
 router.post('/login', user.login)
 router.post('/signup', user.createUser)
-router.get('/welcome', auth, user.signedIn)
+router.get('/dashboard', auth, user.dashboard)
 
 router.get('/:username', user.findByUserName)
 router.put('/:id', user.editUser)

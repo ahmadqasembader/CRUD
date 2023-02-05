@@ -8,24 +8,23 @@ const auth = (req, res, next) =>
     access_token = access_token.split("access_token=")
     access_token = access_token[1];
     
-    if (!access_token) {
+    if (!access_token)
         return res.send("A token is required for authentication");
-    }
     
     try 
     {
         jwt.verify(access_token, config.TOKEN_KEY, 
             (err, user) => 
             {
-                if(err){
+                if(err)
                     return res.send(err)
-                };
+
                 req.body.user = user
                 next()
             }
         );
-
-    } catch (err) 
+    } 
+    catch (err) 
     {
         res.status(401).send("Invalid Token");
     }
