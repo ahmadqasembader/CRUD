@@ -15,7 +15,7 @@ class Users_Operation
     // Home page
     index(req, res) 
     {
-        res.render('index')
+        res.render('login')
     }
 
 
