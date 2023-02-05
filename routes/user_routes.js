@@ -1,19 +1,20 @@
-const User = require('../mongoose');
 const express = require('express');
 const controller = require('../controller/controllers.js')
-const auth = require('../middleware/middleware.js')
+const auth = require('../middleware/auth.js')
 const router = express.Router();
+const bodyParser = require('body-parser')
 
+router.use(bodyParser.urlencoded({extended: true}))
 router.use(express.json())
 
 const user = new controller("Message from the constructor");
 
-router.get('/login', user.login)
-router.get('/welcome', auth, user.signedIn)
-router.get('/', user.dashboard)
-//router.get('/about', user.about)
-router.get('/:username', user.findByUserName)
+router.get('/', user.index)
+router.post('/login', user.login)
 router.post('/signup', user.createUser)
+router.get('/welcome', auth, user.signedIn)
+
+router.get('/:username', user.findByUserName)
 router.put('/:id', user.editUser)
 router.delete('/:id', user.removeUser)
 

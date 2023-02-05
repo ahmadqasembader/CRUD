@@ -1,14 +1,12 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
-var expressLayouts = require('express-ejs-layouts');
+//var expressLayouts = require('express-ejs-layouts');
 
 const user_routes = require('./routes/user_routes')
 const port = process.env.port || 3000
 
-app.use(expressLayouts);
-app.use(express.static(__dirname + 'public/css'))
-app.set('layout', './layouts/login_layout.ejs')
+//app.use(expressLayouts);
 app.set('view engine', 'ejs')
 
 /****************************************/
@@ -17,7 +15,7 @@ app.set('view engine', 'ejs')
 app.get('/', user_routes);
 app.get('/about', user_routes)
 app.get('/welcome', user_routes)
-app.get('/login', user_routes);
+app.post('/login', user_routes);
 app.get('/:username', user_routes);
 app.post('/signup', user_routes);
 app.put('/:id', user_routes);

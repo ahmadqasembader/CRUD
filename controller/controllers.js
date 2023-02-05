@@ -11,40 +11,37 @@ class Users_Operation {
     }
 
     signedIn(req, res) {
-        res.json(req.user)
+        const {email} = req.body.user
+        res.json(req.body.user)    
     }
     
     async login(req, res) 
     {
-        res.render('index', {name: 'Ahmad Bader'})
-        const { email, password } = req.body;
+        let {email, password} = req.body
         try {
-            //validate if the user does exist
             const user = await User.findOne({ email })
 
             //assign the JWT to the user
             if (user && (await bcrypt.compare(password, user.passwordHashed))) 
             {
-                const token = jwt.sign({user}, config.TOKEN_KEY)
-                //res.status(200).send({user, token});
+                const token = jwt.sign({user}, config.TOKEN_KEY, {expiresIn: "24h"})
+                //console.log({user, token})
+                
+                res.cookie("access_token", token, {httpOnly: true})
+                res.redirect('/welcome')
+            }else{
+                res.send("<a href='/'>Username or password is incorrect</a>")
             }
-            
         } catch (error) {
-            res.send(error)
+            console.log(error)
         }
+
     }
 
-    // Returns all users
-    dashboard(req, res) {
-        // User.find((err, data) => {
-        //     if (data.length === 0)
-        //         res.json(
-        //             {
-        //                 message: "No data was found"
-        //             })
-        //     else
-        //         res.send(data)
-        // })
+    // render the index page
+    index(req, res) 
+    {
+        res.render('index')
     }
 
     // Return a specific user based on the username (unique)
