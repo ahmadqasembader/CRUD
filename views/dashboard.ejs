@@ -2,62 +2,46 @@
 <html lang="en">
 
 <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&family=Open+Sans:wght@300&display=swap" rel="stylesheet">
-        
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-family: 'Open Sans', sans-serif;
 
-        }
-
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .box {
-            padding: 40px;
-            background-color: #bebbbb;
-            font-size: 16;
-        }
-
-        i {
-            font: italic;
-            color: #1d81a0;
-        }
-        h1{
-            margin-bottom: 50px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css">
 </head>
 
 <body>
-    <div class="box">
-        <h1>
-            Welcome <i>
-                <%= user.name %>
-            </i>
-        </h1>
+    <%- include('navbar') %>
 
-        <div class="info-box">
-            <h2>Username: <i><%= user.username %></i>
-            </h2>
-            <h2>Email: <i><%= user.email %></i>
-            </h2>
-            <a href="/logout">Log out</a>
-        </div>
+    
+    <table id="example" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>email</th>
+            </tr>
+        </thead>
 
-    </div>
+        <tbody>
+            <tr>
+                <td>
+                    <%= user._id %>
+                </td>
+                <td>
+                    <%= user.name %>
+                </td>
+                <td>
+                    <%= user.username %>
+                </td>
+                <td>
+                    <%= user.email %>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 
 </html>

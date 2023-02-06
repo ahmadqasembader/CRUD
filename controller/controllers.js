@@ -15,15 +15,20 @@ class Users_Operation
     // Login page
     index(req, res) 
     {
-        let access_token = req.headers.cookie
-        access_token = access_token.split("access_token=")
-        access_token = access_token[1];
-        jwt.verify(access_token, config.TOKEN_KEY, (err, user) => {
-            if(err)
-                return err;
-            res.redirect('dashboard')
-        });
-        if(req.headers.cookie)
+
+        //redirecting to the dashboard if the user didn't logout
+        if(req.headers.cookie){
+            let access_token = req.headers.cookie
+            access_token = access_token.split("access_token=")
+            access_token = access_token[1];
+            jwt.verify(access_token, config.TOKEN_KEY, (err, user) => {
+                if(err)
+                    return err;
+                res.redirect('dashboard')
+            });
+        }
+        
+        //otherwise redirect to the login page
         res.render('login')
     }
 
@@ -31,7 +36,7 @@ class Users_Operation
     dashboard(req, res) 
     {
         const {user} = req.body.user
-        res.render('dashboard', {user})
+        res.render('dashboard', {user})//send the data to the ejs file
     }
     
     async login(req, res) 
@@ -143,4 +148,4 @@ class Users_Operation
 
 }
 
-module.exports = Users_Operation;
+module.exports = Users_Operation; 
