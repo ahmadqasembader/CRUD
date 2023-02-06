@@ -12,9 +12,18 @@ class Users_Operation
         console.log("Message: " + mes)
     }
 
-    // Home page
+    // Login page
     index(req, res) 
     {
+        let access_token = req.headers.cookie
+        access_token = access_token.split("access_token=")
+        access_token = access_token[1];
+        jwt.verify(access_token, config.TOKEN_KEY, (err, user) => {
+            if(err)
+                return err;
+            res.redirect('dashboard')
+        });
+        if(req.headers.cookie)
         res.render('login')
     }
 
@@ -22,7 +31,7 @@ class Users_Operation
     dashboard(req, res) 
     {
         const {user} = req.body.user
-        res.send(`<h1>Welcome ${user.name}</h1>`)
+        res.render('dashboard', {user})
     }
     
     async login(req, res) 
@@ -52,15 +61,26 @@ class Users_Operation
         } 
         catch (error) 
         {
-            console.log(error)
+            res.json(error)
         }
+    }
+
+    //Sign up page
+    singup(req, res)
+    {
+        res.render('signup')
+    }
+
+    logout(req, res)
+    {
+        res.clearCookie("access_token")
+        res.redirect('/')
     }
 
     //create a new user and save it to DB
     async createUser(req, res) 
     {
         let { username, name, email, password } = req.body;
-
         //hashing the password
         const passwordHashed = await bcrypt.hash(password, 10);
 
@@ -71,32 +91,28 @@ class Users_Operation
         try {
             //create a new user model and save to the DB
             const user = new User({ username, name, email, passwordHashed })
-
+            if(await User.findOne({ username })){
+                //return res.render('error', {username})
+            }
             //Generate JWT token for each created user
-            let token = jwt.sign({ user }, "token",)
+            const token = jwt.sign({user}, config.TOKEN_KEY, {expiresIn: "24h"})
             user.token = token;
+            res.cookie("access_token", token, {httpOnly: true})
 
             //saving the user into the database
             user.save((user) => {
-                console.log("Datasaved");
-                res.status(200).json(
-                    {
-                        username,
-                        email,
-                        token
-                    }
-                );
+                res.redirect('dashboard')
             })
 
         } catch (err) {
-            console.log('err ' + err);
-            res.status(500).send(Error);
+            res.status(404).send(Error);
         }
     }
 
 
     // Return a specific user based on the username (unique)
-    findByUserName(req, res) {
+    findByUserName(req, res) 
+    {
         let username = req.params.username;
 
         User.find(
@@ -106,7 +122,8 @@ class Users_Operation
     }
 
     // Edit user details
-    editUser(req, res) {
+    editUser(req, res) 
+    {
         let id = req.params.id;
         User.findByIdAndUpdate(id, req.body, { new: true }, () => {
             res.status(200).send(id);
@@ -115,7 +132,8 @@ class Users_Operation
     }
 
     // Deleting users from database
-    removeUser(req, res) {
+    removeUser(req, res) 
+    {
         const id = req.params.id;
 
         User.findByIdAndDelete(id, () => {

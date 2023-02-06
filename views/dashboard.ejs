@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+        
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Open Sans', sans-serif;
+
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .box {
+            padding: 40px;
+            background-color: #bebbbb;
+            font-size: 16;
+        }
+
+        i {
+            font: italic;
+            color: #1d81a0;
+        }
+        h1{
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h1>
+            Welcome <i>
+                <%= user.name %>
+            </i>
+        </h1>
+
+        <div class="info-box">
+            <h2>Username: <i><%= user.username %></i>
+            </h2>
+            <h2>Email: <i><%= user.email %></i>
+            </h2>
+            <a href="/logout">Log out</a>
+        </div>
+
+    </div>
+</body>
+
+</html>
