@@ -16,6 +16,7 @@ class Users_Operation
     index(req, res) 
     {
 
+        let flag = false;
         //redirecting to the dashboard if the user didn't logout
         if(req.headers.cookie){
             let access_token = req.headers.cookie
@@ -29,20 +30,23 @@ class Users_Operation
         }
         
         //otherwise redirect to the login page
-        res.render('login')
+        res.render('login', {flag})
     }
 
-
+    //display the data for logged in user
     dashboard(req, res) 
     {
         const {user} = req.body.user
         res.render('dashboard', {user})//send the data to the ejs file
     }
     
+    //the POST request to login
     async login(req, res) 
     {
         //getting data from user
         let {email, password} = req.body
+        let flag = false;
+
         try {
             const user = await User.findOne({ email })
 
@@ -61,7 +65,9 @@ class Users_Operation
             }
             else
             {
-                res.send("<a href='/'>Username or password is incorrect</a>")
+                //true to display the warning message that the password is incorrect 
+                flag = true;
+                res.render('login', {flag})
             }
         } 
         catch (error) 
@@ -75,14 +81,14 @@ class Users_Operation
     {
         res.render('signup')
     }
-
+    
     logout(req, res)
     {
         res.clearCookie("access_token")
         res.redirect('/')
     }
 
-    //create a new user and save it to DB
+    //the POST request to create a user
     async createUser(req, res) 
     {
         let { username, name, email, password } = req.body;
@@ -114,7 +120,25 @@ class Users_Operation
         }
     }
 
+    //find all users by going to the home page from the navbar
+    findAllUsers(req, res)
+    {    
+        //Sending all data entry as a json
+        let user;
+        User.find((err, data) => {
+            if (data.length === 0) {
+                console.log("No data was found")
+                res.send('users')
+            } else {
+                user = data
+                res.render('users', {data})
+            }
+        })
+    }
 
+    /* Theses functionalities can only be tested using Postman 
+    as they don't have UIs. check user_routes.js to know the url*/
+    
     // Return a specific user based on the username (unique)
     findByUserName(req, res) 
     {
@@ -126,7 +150,7 @@ class Users_Operation
         )
     }
 
-    // Edit user details
+    // Edit user details by suppling the user id
     editUser(req, res) 
     {
         let id = req.params.id;
@@ -136,7 +160,7 @@ class Users_Operation
 
     }
 
-    // Deleting users from database
+    // Delete user by suppling the user id
     removeUser(req, res) 
     {
         const id = req.params.id;

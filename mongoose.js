@@ -32,5 +32,5 @@ const userSchema = new mongoose.Schema({
         minLength: [5, 'at least 5 characters']
     }
 })
-
+ 
 module.exports = mongoose.model("User", userSchema);

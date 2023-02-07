@@ -10,6 +10,7 @@ router.use(express.json())
 const user = new controller("Message from the constructor");
 
 router.get('/', user.index)//login page
+router.get('/users', user.findAllUsers)
 router.post('/login', user.login)//login process
 router.get('/signup', user.singup)//signup page
 router.post('/create', user.createUser)//signup process

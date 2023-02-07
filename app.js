@@ -12,6 +12,7 @@ app.use(express.static(__dirname + '/public'));
 /* GET, POST, PUT, and DELETE Requests  */
 /****************************************/
 app.get('/', user_routes);
+app.get('/users', user_routes)
 app.post('/login', user_routes);
 app.get('/signup', user_routes);
 app.post('/create', user_routes);

@@ -37,3 +37,7 @@ body {
 	font-size: 20px;
 	margin-top: 15px;
 }
+.warning-alert{
+	color: rgb(245, 93, 93);
+	font-size: 12px;
+}

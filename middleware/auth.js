@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const config = process.env;
-
+ 
 const auth = (req, res, next) => 
 {
     let access_token = req.headers.cookie
